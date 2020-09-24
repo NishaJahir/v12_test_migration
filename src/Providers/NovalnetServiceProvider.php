@@ -391,11 +391,12 @@ class NovalnetServiceProvider extends ServiceProvider
 		    $event->addOrderPdfGeneration($orderPdfGenerationModel); 
 		    }
 	    }
+		     }
 	);  
 
 		    
 		    
-	   }
+	  
     }
 }
     
