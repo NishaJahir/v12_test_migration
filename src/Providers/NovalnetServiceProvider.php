@@ -357,47 +357,5 @@ class NovalnetServiceProvider extends ServiceProvider
                 }
             }
         );
-        
-       
-       // Invoice PDF Generation
-	
-	// Listen for the document generation event
-	    $eventDispatcher->listen(OrderPdfGenerationEvent::class,
-	    function (OrderPdfGenerationEvent $event) use ($paymentHelper) {
-		    
-		if($paymentHelper->getPaymentKeyByMop($event->getMop())) {
-		/** @var Order $order */
-		$order = $event->getOrder();
-		$document_type = $event->getDocType();
-		$orderId = (int) $order->id;
-		$authHelper = pluginApp(AuthHelper::class);
-		$orderComments = $authHelper->processUnguarded(
-				function () use ($orderId) {
-					$commentsObj = pluginApp(CommentRepositoryContract::class);
-					$commentsObj->setFilters(['referenceType' => 'order', 'referenceValue' => $orderId]);
-					return $commentsObj->listComments();
-				}
-		   );
-		 foreach($orderComments as $data)
-		 {
-			$comment = (string)$data->text;
-			
-		 }
-		    $this->getLogger(__METHOD__)->error('commentsViewed', $comment);
-		
-		    $orderPdfGenerationModel = pluginApp(OrderPdfGeneration::class);
-		    $orderPdfGenerationModel->advice = $comment;
-		    if ($document_type == 'invoice') {
-		    $event->addOrderPdfGeneration($orderPdfGenerationModel); 
-		    }
-	    }
-		     }
-	);  
-
-		    
-		    
-	  
     }
 }
-    
-    
